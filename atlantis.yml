@@ -1,0 +1,5 @@
+version: 3
+projects:
+  - name: test
+    dir: test
+    workspace: default
