@@ -1,3 +1,1 @@
-  - name: test1
-    dir: test1
-    workspace: default
+resource "null_resource" "nr" {}
