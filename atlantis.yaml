@@ -6,4 +6,3 @@ projects:
   - name: test2
     dir: test2
     workspace: default
-
