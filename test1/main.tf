@@ -1,2 +1,2 @@
-resource "null_resource" "nr" {
-}
+#resource "null_resource" "nr" {
+#}
