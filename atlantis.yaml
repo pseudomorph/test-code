@@ -3,6 +3,3 @@ projects:
   - name: test1
     dir: test1
     workspace: default
-  - name: test2
-    dir: test2
-    workspace: default
