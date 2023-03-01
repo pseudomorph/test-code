@@ -63,6 +63,9 @@ def get_review_domain_from_event(github_event):
     before = re.findall("- \[ \] request (\w+) review", before_body)
     after = re.findall("- \[[xX]]\] request (\w+) review", after_body)
 
+    print(f"before: {before}")
+    print(f"after: {after}")
+
     return list(set(before) & set(after))
 
 
