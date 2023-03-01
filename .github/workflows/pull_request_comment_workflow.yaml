@@ -11,5 +11,5 @@ jobs:
           python ./scripts/workflows/policy_review_workflow.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_EVENT: ${{ github.event }}
+          GITHUB_EVENT: ${{ toJson(github.event) }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
