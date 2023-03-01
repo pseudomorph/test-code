@@ -49,9 +49,10 @@ def get_review_domain_from_event(github_event):
     before = re.findall("- \[ \] request (\w+) review", before_body)
     after = re.findall("- \[x\] request (\w+) review", after_body)
 
+    review_domains = list(set(before) & set(after))
     print(f"Review_domains: {review_domains} were marked by user for review")
 
-    return list(set(before) & set(after))
+    return review_domains
 
 
 def filter_existing_requested_review_domains(review_domains, labels):
