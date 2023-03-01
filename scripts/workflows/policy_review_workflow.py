@@ -26,7 +26,7 @@ def update_issue(github_event, review_domains):
         review_domain_labels.append(f"{review_domain}_policy_review_requested")
 
     r = requests.post(
-        github_event["issue"]["comments_url"],
+        f"{github_event["issue"]["pull_request"]["url"]}/labels",
         headers=API_HEADERS,
         data=json.dumps({"body": comment}),
     )
