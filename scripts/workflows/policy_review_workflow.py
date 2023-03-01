@@ -54,6 +54,7 @@ def post_review_request_comment(domains, pr_number):
         headers=API_HEADERS,
         data=json.dumps({"body": message}),
     )
+    print(f"{API_REPO_URL}/issues/{pr_number}/comments")
     print(r.status_code)
     print(r.json())
 
