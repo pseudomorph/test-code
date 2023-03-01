@@ -1,0 +1,15 @@
+name: 'On Review'
+on: issue_comment
+jobs:
+  pr_commented:
+    name: 'PR comment'
+    if: ${{ github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Policy Reviews
+        run: |
+          python ./scripts/workflows/policy_review_workflow.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_EVENT: ${{ github.event }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
