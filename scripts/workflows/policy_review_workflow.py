@@ -22,7 +22,7 @@ def update_issue(github_event, review_domains):
     review_domain_labels = []
     comment = "Reviews have been requested for:"
     for review_domain in review_domains:
-        comment += "\n{review_domain}"
+        comment += f"\n{review_domain}"
         review_domain_labels.append(f"{review_domain}_policy_review_requested")
 
     r = requests.post(
