@@ -80,7 +80,7 @@ def main():
     if review_domains:
         filtered_review_domains = filter_existing_requested_review_domains(
             review_domains, labels)
-        update_issue(review_domains, pr_number)
+        update_issue(github_event, review_domains)
 
 
 if __name__ == "__main__":
