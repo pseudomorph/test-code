@@ -7,17 +7,7 @@ import requests
 import re
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_REPOSITORY = os.getenv("GITHUB_REPOSITORY")
-
 GITHUB_EVENT = os.getenv("GITHUB_EVENT")
-
-PR_NUMBER = os.getenv("PR_NUMBER")
-REF_ID = os.getenv("REF_ID")
-
-URI = "https://api.github.com"
-API_SEARCH_URL = f"{URI}/search"
-API_REPO_URL = f"{URI}/repos/{GITHUB_REPOSITORY}"
-REPO_URL = f"{URI}/repos/{GITHUB_REPOSITORY}"
 
 API_HEADERS = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -28,34 +18,27 @@ API_HEADERS = {
 # helper function
 
 
-def get_labels(pr_number):
-    """ getting PR's labels """
-    r = requests.get(
-        f"{API_REPO_URL}/issues/{pr_number}/labels", headers=API_HEADERS)
-    return [res["name"] for res in r.json()]
+def update_issue(github_event, review_domains):
+    review_domain_labels = []
+    comment = "Reviews have been requested for:"
+    for review_domain in review_domains:
+        message += "\n{review_domain}"
+        review_domain_labels.append(f"{review_domain}_policy_review_requested")
 
-
-def add_labels(pr_number, labels):
-    if not labels:
-        return
     r = requests.post(
-        f"{API_REPO_URL}/issues/{pr_number}/labels",
+        github_event["issue"]["comments_url"],
         headers=API_HEADERS,
-        data=json.dumps({"labels": labels}),
+        data=json.dumps({"body": comment}),
     )
-    print("Adding Labels", labels)
+    print("Adding comment", comment)
     print(r.json())
 
-
-def post_review_request_comment(domains, pr_number):
-    message = f"Reviews have been requested for: {domains}"
     r = requests.post(
-        f"{API_REPO_URL}/issues/{pr_number}/comments",
+        github_event["issue"]["labels_url"],
         headers=API_HEADERS,
-        data=json.dumps({"body": message}),
+        data=json.dumps({"labels": review_domain_labels}),
     )
-    print(f"{API_REPO_URL}/issues/{pr_number}/comments")
-    print(r.status_code)
+    print("Adding labels", review_domain_labels)
     print(r.json())
 
 
@@ -66,14 +49,25 @@ def get_review_domain_from_event(github_event):
     before = re.findall("- \[ \] request (\w+) review", before_body)
     after = re.findall("- \[x\] request (\w+) review", after_body)
 
-    print(f"before: {before}")
-    print(f"after: {after}")
+    print(f"Review_domains: {review_domains} were marked by user for review")
 
     return list(set(before) & set(after))
 
 
-if __name__ == "__main__":
-    pr_number = PR_NUMBER
+def filter_existing_requested_review_domains(review_domains, labels):
+    filtered_review_domains = []
+    for review_domain in review_domains:
+        if f"{review_domain}_policy_review_requested" in labels:
+            print(
+                f"Domain: {review_domain} has already been submitted for policy review")
+        else:
+            print(
+                "Domain: {review_domain} has been marked for review submission")
+            filtered_review_domains.append(review_domain)
+    return filtered_review_domains
+
+
+def main():
     try:
         github_event = json.loads(GITHUB_EVENT)
     except json.decoder.JSONDecodeError:
@@ -81,6 +75,12 @@ if __name__ == "__main__":
         exit(1)
 
     review_domains = get_review_domain_from_event(github_event)
-    print(f"review_domains: {review_domains}")
+    labels = github_event["issue"]["labels"]
     if review_domains:
-        post_review_request_comment(review_domains, pr_number)
+        filtered_review_domains = filter_existing_requested_review_domains(
+            review_domains, labels)
+        update_issue(review_domains, pr_number)
+
+
+if __name__ == "__main__":
+    main()
