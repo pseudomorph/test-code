@@ -54,6 +54,8 @@ def post_review_request_comment(domains, pr_number):
         headers=API_HEADERS,
         data=json.dumps({"body": message}),
     )
+    print(r.status_code)
+    print(r.json())
 
 
 def get_review_domain_from_event(github_event):
