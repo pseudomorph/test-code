@@ -34,7 +34,7 @@ def update_issue(github_event, review_domains):
     print(r.json())
 
     r = requests.post(
-        github_event["issue"]["pull_request"]["url"] + "/labels",
+        github_event["issue"]["url"] + "/labels",
         headers=API_HEADERS,
         data=json.dumps({"labels": review_domain_labels}),
     )
