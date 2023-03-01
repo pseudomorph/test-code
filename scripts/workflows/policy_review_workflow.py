@@ -57,7 +57,7 @@ def post_review_request_comment(domains, pr_number):
 
 
 def get_review_domain_from_event(github_event):
-    before_body = github_event["changes"]["from"]
+    before_body = github_event["changes"]["body"]["from"]
     after_body = github_event["comment"]["body"]
 
     before = re.findall("- \[ \] request (\w+) review", before_body)
