@@ -10,6 +10,7 @@ jobs:
         uses: actions/checkout@master
       - name: Policy Reviews
         run: |
+          pip install slack_sdk
           python ./scripts/workflows/policy_review_workflow.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
