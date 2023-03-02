@@ -5,6 +5,8 @@ import sys
 import json
 import requests
 import re
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_EVENT = os.getenv("GITHUB_EVENT")
