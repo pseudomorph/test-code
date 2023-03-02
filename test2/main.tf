@@ -1,1 +1,1 @@
-data "null_data" "asdf" {}
+data "null_data_source" "asdf" {}
